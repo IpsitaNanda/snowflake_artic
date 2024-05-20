@@ -42,7 +42,7 @@ slide_window = 7  # how many last conversations to remember. This is the slide w
 def main():
     st.image("logo.png", width=150)
     st.title(f" MindEase, your 24/7 mental health companion")
-    st.write("This is the list of documents you already have and that will be used to answer your questions:")
+    st.write("Here is the list of documents you already have, which will be used to answer your questions:")
 
     docs_available = session.sql("ls @docs").collect()
     list_docs = []
@@ -83,8 +83,8 @@ def main():
 
 def config_options():
     st.sidebar.selectbox('Select your model:', (
-        'mixtral-8x7b',
         'snowflake-arctic',
+        'mixtral-8x7b',
         'mistral-large',
         'llama3-8b',
         'llama3-70b',
@@ -94,13 +94,11 @@ def config_options():
         'gemma-7b'), key="model_name")
 
     # For educational purposes. Users can chech the difference when using memory or not
-    st.sidebar.checkbox('Do you want that I remember the chat history?', key="use_chat_history", value=True)
+    st.sidebar.checkbox('Would you like me to remember our chat history?', key="use_chat_history", value=True)
 
-    st.sidebar.checkbox('Debug: Click to see summary generated of previous conversation', key="debug", value=True)
+    st.sidebar.checkbox('Debug: Click to view a summary of our previous conversation', key="debug", value=True)
     st.sidebar.button("Start Over", key="clear_conversation")
     st.sidebar.expander("Session State").write(st.session_state)
-
-
 def init_messages():
     # Initialize chat history
     if st.session_state.clear_conversation or "messages" not in st.session_state:
