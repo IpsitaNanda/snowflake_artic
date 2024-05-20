@@ -4,7 +4,7 @@ import streamlit as st
 from snowflake.snowpark import Session
 import pandas as pd
 config = configparser.ConfigParser()
-config.read("configurations/properties.ini")
+config.read("properties.ini")
 configuration = config['SF']
 ACCOUNT=configuration.get('ACCOUNT')
 USER=configuration.get('USER')
@@ -14,7 +14,6 @@ WAREHOUSE=configuration.get('WAREHOUSE')
 DATABASE=configuration.get('DATABASE')
 SCHEMA=configuration.get('SCHEMA')
 # Snowflake connection parameters
-#https://crb98127.snowflakecomputing.com
 connection_params = {
     "account": ACCOUNT,
     "USER": USER,
