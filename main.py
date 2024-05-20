@@ -109,10 +109,10 @@ def get_similar_chunks(question):
     cmd = """
         with results as
         (SELECT RELATIVE_PATH,
-           VECTOR_COSINE_SIMILARITY(docs_chunks_table.chunk_vec,
+           VECTOR_COSINE_SIMILARITY(doc_chunks_table.chunk_vec,
                     SNOWFLAKE.CORTEX.EMBED_TEXT_768('e5-base-v2', ?)) as similarity,
            chunk
-        from docs_chunks_table
+        from doc_chunks_table
         order by similarity desc
         limit ?)
         select chunk, relative_path from results 
