@@ -3,8 +3,6 @@ import configparser
 import streamlit as st
 from snowflake.snowpark import Session
 import pandas as pd
-import google_auth_oauthlib.flow
-
 config = configparser.ConfigParser()
 config.read("configurations/properties.ini")
 configuration = config['SF']
