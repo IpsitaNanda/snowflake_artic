@@ -27,7 +27,13 @@ session = Session.builder.configs(connection_params).create()
 #st.write("Connected to Snowflake")
 
 pd.set_option("max_colwidth", None)
+with open("sidebar.md", "r") as sidebar_file:
+ sidebar_content = sidebar_file.read()
 
+with open("stlyes.md", "r") as styles_file:
+ styles_content = styles_file.read()
+
+st.sidebar.markdown(sidebar_content)
 ### Default Values
 # model_name = 'mistral-7b' #Default but we allow user to select one
 num_chunks = 3  # Num-chunks provided as context. Play with this to check how it affects your accuracy
@@ -38,43 +44,8 @@ slide_window = 7  # how many last conversations to remember. This is the slide w
 # use_chat_history = 0 #Use the chat history by default
 
 ### Functions
-def intro():
-    st.image("logo.png", width=150)
 
-    st.title("# Welcome to MindEase! 👋")
-
-    # st.subheader("Prevalence:Mental health disorders are prevalent in the United States, with an estimated 1 in 5 adults experiencing a mental illness each year.",divider='rainbow')
-
-    st.subheader("Prevalence:")
-    st.markdown(
-        "Mental health disorders are prevalent in the United States, with an estimated 1 in 5 adults experiencing a mental illness each year.")
-
-    st.subheader("Specific Disorders:")
-    st.markdown(
-        "Anxiety disorders are the most common mental illness in the U.S., affecting 40 million adults aged 18 and older, or about 18.1% of the population every year. Major depressive disorder affects approximately 17.3 million adults, or about 7.1% of the U.S. population.  Bipolar disorder affects approximately 4.4% of adults in the U.S. at some point in their lives.Schizophrenia affects about 1.1% of the U.S. adult population.")
-
-    st.subheader("Children and Adolescents:")
-    st.markdown(
-        "Approximately 7.7% of children aged 3-17 years (about 4.5 million) have diagnosed anxiety, while 3.2% (about 1.9 million) have diagnosed depression.Half of all lifetime cases of mental illness begin by age 14, and 75% by age 24.")
-
-    st.subheader("Treatment Gap:")
-    st.markdown(
-        "Despite the high prevalence of mental health conditions, nearly 60% of adults and nearly 50% of children aged 6-17 with a mental illness did not receive mental health services in the previous year.Cost, lack of access to care, stigma, and shortage of mental health professionals are significant barriers to accessing treatment.")
-
-    st.subheader("Substance Abuse:")
-    st.markdown(
-        "Mental health disorders often co-occur with substance abuse disorders. In 2019, 9.5% of adults (aged 18 and older) had a substance use disorder (SUD) in the past year, including 14.5 million adults with an alcohol use disorder and 8.8 million with an illicit drug use disorder.")
-
-    st.subheader("Suicide:")
-    st.markdown(
-        "Suicide is a leading cause of death in the United States. In 2019, there were 47,511 recorded suicides, making it the 10th leading cause of death overall.Suicide rates are highest among American Indian and Alaska Native populations, followed by white populations.")
-
-    st.markdown(
-        "These statistics highlight the significant impact of mental health disorders in the United States and the importance of increasing access to mental health services, reducing stigma, and promoting mental wellness across all age groups")
-
-    st.markdown("Our App MindEase provides a safe space where users can interact with mental health information without the fear of being judged")
-
-session = Session.builder.configs(connection_params).create()
+#session = Session.builder.configs(connection_params).create()
 #st.write("Connected to Snowflake")
 
 
@@ -84,7 +55,7 @@ def initialize_session_state():
     if "clear_conversation" not in st.session_state:
         st.session_state.clear_conversation = False
     if "model_name" not in st.session_state:
-        st.session_state.model_name = 'mistral-7b'
+        st.session_state.model_name = 'snowflake-arctic'
     if "use_chat_history" not in st.session_state:
         st.session_state.use_chat_history = True
     if "debug" not in st.session_state:
@@ -92,6 +63,7 @@ def initialize_session_state():
     if "messages" not in st.session_state:
         st.session_state.messages = []
 def main():
+    initialize_session_state()
     st.image("logo.png", width=150)
     st.title(f" MindEase, your 24/7 mental health companion")
     st.write("Here is the list of documents you already have, which will be used to answer your questions:")
@@ -134,21 +106,20 @@ def main():
 
 
 def config_options():
-    st.sidebar.selectbox('Select your model:', (
-        'snowflake-arctic',
-        'mixtral-8x7b',
-        'mistral-large',
-        'llama3-8b',
-        'llama3-70b',
-        'reka-flash',
-        'mistral-7b',
-        'llama2-70b-chat',
-        'gemma-7b'), key="model_name")
-
-    # For educational purposes. Users can chech the difference when using memory or not
-    st.sidebar.checkbox('Would you like me to remember our chat history?', key="use_chat_history", value=True)
-
-    st.sidebar.button("Start Over", key="clear_conversation")
+    model = st.radio(
+        "",
+        options=['snowflake-arctic',
+                 'mixtral-8x7b',
+                 'mistral-large',
+                 'llama3-8b',
+                 'llama3-70b',
+                 'reka-flash',
+                 'mistral-7b',
+                 'llama2-70b-chat',
+                 'gemma-7b'],
+        index=0,
+        horizontal=True,
+    )
     st.sidebar.expander("Session State").write(st.session_state)
 def init_messages():
     # Initialize chat history
@@ -276,16 +247,8 @@ def complete(myquestion):
     return df_response
 
 
-page_names_to_funcs = {
-    "Home": intro,
-    "Chat": main
-}
 
-demo_name = st.sidebar.selectbox("Navigate MindEase", page_names_to_funcs.keys())
-page_names_to_funcs[demo_name]()
-
-
-#if __name__ == "__main__":
-#    main()
+if __name__ == "__main__":
+   main()
 
 
