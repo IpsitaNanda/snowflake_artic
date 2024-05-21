@@ -148,7 +148,6 @@ def config_options():
     # For educational purposes. Users can chech the difference when using memory or not
     st.sidebar.checkbox('Would you like me to remember our chat history?', key="use_chat_history", value=True)
 
-    st.sidebar.checkbox('Debug: Click to view a summary of our previous conversation', key="debug", value=True)
     st.sidebar.button("Start Over", key="clear_conversation")
     st.sidebar.expander("Session State").write(st.session_state)
 def init_messages():
@@ -218,9 +217,9 @@ def summarize_question_with_history(chat_history, question):
     df_response = session.sql(cmd, params=[st.session_state.model_name, prompt]).collect()
     sumary = df_response[0].RESPONSE
 
-    if st.session_state.debug:
-        st.sidebar.text("Summary to be used to find similar chunks in the docs:")
-        st.sidebar.caption(sumary)
+    #if st.session_state.debug:
+    #    st.sidebar.text("Summary to be used to find similar chunks in the docs:")
+    #    st.sidebar.caption(sumary)
 
     sumary = sumary.replace("'", "")
 
